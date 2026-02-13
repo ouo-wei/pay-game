@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>付錢小遊戲</title>
+<style>
+@font-face{
+  font-family:"BpmfZihiKaiStd-Regular";
+  src: local("BpmfZihiKaiStd-Regular");
+}
+body{
+  margin:0;
+  font-family:"BpmfZihiKaiStd-Regular", sans-serif;
+  background:#f2f2f2;
+  overflow:hidden;
+}
+/* ===== 提示頁 ===== */
+#intro{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+}
+.slide{
+  position:relative;
+  width:485px;
+  height:80%;
+  background:#97CBFF;
+  border-radius:20px;
+  padding:60px 50px;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.slide h1{
+  font-size:36px;
+  margin:0;
+  text-align:center;
+}
+.slideContentLeft{
+  text-align:left;
+  margin:auto 0;
+  font-size:20px;
+  line-height:1.9;
+}
+.navBtn{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:26px;
+  padding:12px 18px;
+  border-radius:50%;
+  background:white;
+  border:none;
+  cursor:pointer;
+  font-family:"BpmfZihiKaiStd-Regular";
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#prevBtn{left:-35px;}
+#nextBtn{right:-35px;}
+#startBtn{
+  display:none;
+  background:#0066CC;
+  color:white;
+  font-size:22px;
+  padding:12px 30px;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+  position:absolute;
+  bottom:30px;      
+  left:50%;
+  transform:translateX(-50%);
+  font-family:"BpmfZihiKaiStd-Regular";
+}
+/* ===== 遊戲版面 ===== */
+#game{height:100vh;box-sizing:border-box;}
+#top{display:flex;height:80vh;}
+#left{
+  flex:2;
+  display:flex;
+  align-items:center;      
+  justify-content:center;  
+  position:relative;
+  background:#ffffff;
+}
+#right{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  background:#e6f4ff;
+}
+#product{
+  width:500px;
+  height:500px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#product img{
+  width:500px;
+  height:500px;
+}
+#priceTag{
+  position:absolute;
+  bottom:10px;  
+  right:10px;   
+  background:#97CBFF;
+  padding:12px 22px;
+  border-radius:14px;
+  font-size:34px;
+}
+#sumArea{
+  height:25%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  font-size:30px;
+  background:#cfe8ff;
+}
+#eyeBtn{
+  position:absolute;
+  right:15px;
+  bottom:15px;
+  cursor:pointer;
+}
+#payZone{
+  height:75%;
+  border:3px dashed #666;
+  border-radius:20px;
+  margin:10px;
+  padding:10px;
+  position:relative;
+  background:#ffffff;
+}
+#payZone::before {
+  content: "付錢區";
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-family:"BpmfZihiKaiStd-Regular";
+  color:#cccccc;
+  font-size:24px;
+  pointer-events:none;
+  z-index:0;
+}
+#coins{
+  height:20vh;
+  background:#d9d9d9;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 60px;
+  box-sizing:border-box;
+}
+.coin{
+  border:3px solid #333;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:grab;
+  user-select:none;
+  font-weight:bold;
+  position:relative;
+  font-family:"BpmfZihiKaiStd-Regular";
+}
+.coin[data-value="1000"]{width:110px;height:60px;background:#ABDBED;border-radius:12px;}
+.coin[data-value="100"]{width:95px;height:60px;background:#EDABAB;border-radius:12px;}
+.coin[data-value="10"]{width:60px;height:60px;background:#D7D4CB;border-radius:50%;}
+.coin[data-value="1"]{width:45px;height:45px;background:#D6B880;border-radius:50%;}
+#historyBtn{
+  background:#97CBFF;
+  font-size:24px;
+  padding:14px 28px;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+  font-family:"BpmfZihiKaiStd-Regular";
+}
+/* ===== 歷史視窗 ===== */
+#modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+}
+.modalContent{
+  width:485px;
+  height:80%;
+  background:#97CBFF;
+  border-radius:20px;
+  padding:40px;
+  box-sizing:border-box;
+  text-align:center;
+  overflow:auto;
+}
+.historyBlock{
+  margin:20px 0;
+}
+.historyCoins{
+  display:flex;
+  gap:10px;
+  justify-content:center;  /* 整體置中 */
+  align-items:flex-end;    /* 底部對齊 */
+  flex-wrap:wrap;
+}
+
+.historyCoins .coinWrapper{
+  display:flex;
+  align-items:flex-end;  /* coin 與 times 底部對齊 */
+  margin-right:8px;
+}
+.historyCoins .coin{
+  width:auto; height:auto;
+  padding:10px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-weight:bold;
+  margin-bottom:0;  /* 取消底部間距 */
+}
+.historyCoins .coin[data-value="1"] {
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  padding:0;
+  font-size:16px;
+}
+.historyCoins .times{
+  margin-left:4px;
+  font-size:18px;
+  align-self:flex-end;
+}
+.historyTitle{
+  font-size:22px;
+  margin-bottom:10px;
+}
+</style>
+</head>
+<body>
+
+<div id="game">
+  <div id="top">
+    <div id="left">
+      <div id="product">
+        <img src="product.png" alt="商品圖片">
+      </div>
+      <div id="priceTag">3512元</div>
+    </div>
+    <div id="right">
+      <div id="sumArea">
+        <span id="sumText">＊＊＊＊</span>
+        <span id="eyeBtn">👁</span>
+      </div>
+      <div id="payZone"></div>
+    </div>
+  </div>
+  <div id="coins">
+    <div style="display:flex;gap:40px;align-items:center;">
+      <div class="coin" data-value="1000">1000</div>
+      <div class="coin" data-value="100">100</div>
+      <div class="coin" data-value="10">10</div>
+      <div class="coin" data-value="1">1</div>
+    </div>
+    <button id="historyBtn">過去付款方式</button>
+  </div>
+</div>
+
+<div id="intro">
+  <div class="slide">
+    <button id="prevBtn" class="navBtn" onclick="prevSlide()"><</button>
+    <button id="nextBtn" class="navBtn" onclick="nextSlide()">></button>
+    <div id="slideContent"></div>
+    <button id="startBtn" onclick="startGame()">開始遊戲</button>
+  </div>
+</div>
+
+<div id="modal"><div class="modalContent" id="modalContent"></div></div>
+
+<script>
+const PRICE=3512;
+const REQUIRED_WAYS=3;
+let currentSum=0;
+let history=[];
+let showSum=false;
+
+// ===== 音效 =====
+const coinPlaceSound = new Audio('coinPlace.mp3');   
+const coinRemoveSound = new Audio('coinRemove.mp3'); 
+const successNewSound = new Audio('successNew.mp3');
+const successRepeatSound = new Audio('successRepeat.mp3');
+const successAllSound = new Audio('successAll.mp3');
+const btnClickSound = new Audio('btnClick.mp3');
+
+/* ===== 提示頁 ===== */
+const slides=[
+`<h1>付錢小遊戲</h1>
+<div class="slideContentLeft">
+  <p>我們在買東西󠇡時，可以用不一󠇡樣的錢幣組合來付錢。</p>
+  <p>像10塊錢就可以付1個󠇡10塊，或10個󠇡1塊。</p>
+  <p>接下來請試試看用不同的3種方式來付錢吧！</p>
+</div>`,
+`<div class="slideContentLeft"><p>在遊戲畫面中間會有一󠇡樣商品。</p><p>在商品右下角的藍色框裡，是你要支付的價錢。</p></div>`,
+`<div class="slideContentLeft"><p>在遊戲畫面的下方有1000元、100元、10元與1元。</p><p>請長按錢幣來移動它們到付錢區來支付。</p></div>`,
+`<div class="slideContentLeft"><p>如果不小心放錯錢幣，點一󠇡下在付錢區的錢幣就可以移除。</p><p>在付錢區上方，會是你已經支付的金額，按右下角的眼睛就可以查看你支付的總金額。</p></div>`,
+`<div class="slideContentLeft"><p>當支付的金額剛好時，就會自動完成1種付款方式。</p><p>你總共需要完成3種不同方式喔！</p><p>一󠇢起來試試看吧！</piv></div>`
+];
+let currentSlide=0;
+function renderSlide(){
+  document.getElementById('slideContent').innerHTML=slides[currentSlide];
+  document.getElementById('prevBtn').style.display=currentSlide===0?'none':'block';
+  document.getElementById('nextBtn').style.display=currentSlide===slides.length-1?'none':'block';
+  document.getElementById('startBtn').style.display=currentSlide===slides.length-1?'block':'none';
+}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;renderSlide();}}
+function prevSlide(){if(currentSlide>0){currentSlide--;renderSlide();}}
+function startGame(){
+  btnClickSound.currentTime=0;
+  btnClickSound.play();
+  document.getElementById('intro').style.display='none';
+}
+renderSlide();
+
+/* ===== 金額 ===== */
+function updateSum(){document.getElementById('sumText').textContent=showSum?currentSum+'元':'＊＊＊＊';}
+document.getElementById('eyeBtn').onclick=function(){showSum=!showSum;updateSum();};
+updateSum();
+
+/* ===== 拖曳 ===== */
+document.querySelectorAll('.coin').forEach(c=>c.addEventListener('mousedown',startDrag));
+function startDrag(e){
+  const value=Number(e.target.dataset.value);
+  const clone=e.target.cloneNode(true);
+  clone.style.position='absolute';
+  clone.style.zIndex=1000;
+  document.body.appendChild(clone);
+  move(e.clientX,e.clientY);
+  function move(x,y){clone.style.left=x-clone.offsetWidth/2+'px';clone.style.top=y-clone.offsetHeight/2+'px';}
+  function onMove(ev){move(ev.clientX,ev.clientY);}  
+  document.addEventListener('mousemove',onMove);
+  document.addEventListener('mouseup',function up(ev){
+    document.removeEventListener('mousemove',onMove);
+    document.removeEventListener('mouseup',up);
+    const rect=payZone.getBoundingClientRect();
+    if(ev.clientX>rect.left&&ev.clientX<rect.right&&ev.clientY>rect.top&&ev.clientY<rect.bottom){
+      clone.style.position='absolute';
+      clone.style.left=(ev.clientX-rect.left-30)+'px';
+      clone.style.top=(ev.clientY-rect.top-30)+'px';
+      payZone.appendChild(clone);
+
+      coinPlaceSound.currentTime = 0;
+      coinPlaceSound.play();
+
+      currentSum+=value;
+      updateSum();
+      clone.onclick=function(){
+        currentSum-=value;
+        updateSum();
+        coinRemoveSound.currentTime = 0;
+        coinRemoveSound.play();
+        clone.remove();
+        // 檢查扣掉後是否剛好
+        checkPayment();
+      };
+      checkPayment();
+    }else clone.remove();
+  });
+}
+
+/* ===== 判定 ===== */
+function checkPayment(){
+  if(currentSum!==PRICE) return;
+  const values=[...payZone.children].map(c=>Number(c.dataset.value));
+  const recordObj={1000:0,100:0,10:0,1:0};
+  values.forEach(v=>recordObj[v]++);
+  const recordKey=JSON.stringify(recordObj);
+
+  if(history.includes(recordKey)){
+    showMessage(`你剛剛已經使用過這種方式了。<br>換一󠇢種支付方法試試吧！<br>還需要嘗試${REQUIRED_WAYS-history.length}種付錢方式喔！`,false);
+    successRepeatSound.currentTime=0;
+    successRepeatSound.play();
+  }else{
+    history.push(recordKey);
+    if(history.length<REQUIRED_WAYS){
+      showMessage(`你已完成${history.length}種支付方式，<br>還要嘗試用${REQUIRED_WAYS-history.length}種方式來付錢。`,false);
+      successNewSound.currentTime=0;
+      successNewSound.play();
+    }else{
+      showMessage(`恭喜你已經用了3種不同的方式來完成支付！<br><br>同樣的金額可以有很多不同的付款方式。<br>接下來我們再繼續練習來了解吧！`,true);
+      successAllSound.currentTime=0;
+      successAllSound.play();
+    }
+  }
+
+  payZone.innerHTML='';
+  currentSum=0;
+  updateSum();
+}
+
+/* ===== 提示訊息視窗 ===== */
+function showMessage(text, cannotClose){
+  const intro=document.getElementById('intro');
+  const content=document.getElementById('slideContent');
+  document.getElementById('prevBtn').style.display='none';
+  document.getElementById('nextBtn').style.display='none';
+  const btn=document.getElementById('startBtn');
+  btn.style.display=cannotClose?'none':'block';
+  btn.textContent='繼續';
+  content.innerHTML=`<div class="slideContentLeft" style="font-size:22px;line-height:1.8;">${text}</div>`;  
+  intro.style.display='flex';
+  intro.style.zIndex=100;
+  if(!cannotClose){
+    btn.onclick=function(){
+      btnClickSound.currentTime=0;
+      btnClickSound.play();
+      intro.style.display='none';
+      renderSlide();
+    }
+  }
+}
+
+/* ===== 歷史 ===== */
+document.getElementById('historyBtn').onclick=function(){
+  const modal=document.getElementById('modal');
+  const content=document.getElementById('modalContent');
+  content.innerHTML=`<h2>${PRICE}元</h2>`;
+  if(history.length===0){content.innerHTML+='<p>目前還沒有完成過支付</p>';}
+  else history.forEach((r,i)=>{
+    const obj=JSON.parse(r);
+    content.innerHTML+=`<div class="historyBlock">
+      <div class="historyTitle">第${i+1}種方式</div>
+      <div class="historyCoins">${renderHistoryCoins(obj)}</div>
+    </div>`;
+  });
+  modal.style.display='flex';
+  modal.style.zIndex=100;
+};
+document.getElementById('modal').onclick=function(e){if(e.target.id==='modal')this.style.display='none';};
+
+function renderHistoryCoins(obj){
+  const order=[1000,100,10,1];
+  let html='';
+  order.forEach(v=>{
+    if(obj[v]>0){
+      html+=`<div class="coinWrapper">
+        <div class="coin" data-value="${v}" style="cursor:default;">${v}</div>
+        <div class="times">x${obj[v]}</div>
+      </div>`;
+    }
+  });
+  return html;
+}
+</script>
+</body>
+</html>
