@@ -47,6 +47,16 @@ body{
   font-size:20px;
   line-height:1.9;
 }
+
+/* ===== 說明頁圖片 ===== */
+.slideContentLeft img{
+  display:block;
+  margin:0 auto 20px auto;  /* 置中 + 下方留距 */
+  max-width:100%;           /* 不超出寬度 */
+  max-height:250px;         /* 控制高度 */
+  height:auto;
+}
+
 .navBtn{
   position:absolute;
   top:50%;
@@ -311,9 +321,29 @@ const slides=[
   <p>像10塊錢就可以付1個󠇡10塊，或10個󠇡1塊。</p>
   <p>接下來請試試看用不同的3種方式來付錢吧！</p>
 </div>`,
-`<div class="slideContentLeft"><p>在遊戲畫面中間會有一󠇡樣商品。</p><p>在商品右下角的藍色框裡，是你要支付的價錢。</p></div>`,
-`<div class="slideContentLeft"><p>在遊戲畫面的下方有1000元、100元、10元與1元。</p><p>請長按錢幣來移動它們到付錢區來支付。</p></div>`,
-`<div class="slideContentLeft"><p>如果不小心放錯錢幣，點一󠇡下在付錢區的錢幣就可以移除。</p><p>在付錢區上方，會是你已經支付的金額，按右下角的眼睛就可以查看你支付的總金額。</p></div>`,
+`<div class="slideContentLeft">
+  <img src="intro2.png" alt="說明圖片2">
+  <p>在遊戲畫面中間會有一󠇡樣商品。</p>
+  <p>在商品右下角的藍色框裡，是你要支付的價錢。</p>
+</div>`,
+`<div class="slideContentLeft">
+  <img src="intro3.png" alt="說明圖片3">
+  <p>在遊戲畫面的下方有1000元、100元、10元與1元。</p>
+  <p>請長按錢幣來移動它們到付錢區來支付。</p>
+</div>`,
+`<div class="slideContentLeft">
+  <img src="intro4.png" alt="說明圖片4">
+  <p>如果不小心放錯錢幣，點一󠇡下在付錢區的錢幣就可以移除。</p>
+</div>`,
+`<div class="slideContentLeft">
+  <img src="intro5.png" alt="過去付款方式圖片">
+  <p>在付錢區下方的「過去付款方式」按鈕，可以讓你看到用過的付錢方式。</p>
+</div>`,
+`<div class="slideContentLeft">
+  <img src="intro6.png" alt="說明圖片5">
+  <p>在付錢區上方，會是你已經支付的金額。</p>
+  <p>按右下角的眼睛就可以查看你支付的總金額。</p>
+</div>`,
 `<div class="slideContentLeft"><p>當支付的金額剛好時，就會自動完成1種付款方式。</p><p>你總共需要完成3種不同方式喔！</p><p>一󠇢起來試試看吧！</piv></div>`
 ];
 let currentSlide=0;
