@@ -40,7 +40,7 @@ body{
 
 .slideContentLeft{
   text-align:left;
-  font-size:20px;
+  font-size:24px;
   line-height:1.2;
   margin-top: 0;
 
@@ -59,7 +59,7 @@ body{
   left: 40px;   /* ← 改成 left */
   right: auto;  /* ← 加這行避免衝突 */
   font-family: "BpmfZihiKaiStd-Regular";
-  font-size: 18px;
+  font-size: 20px;
   color: #ffffff;
 }
 
@@ -260,7 +260,6 @@ body{
 }
 
 #finishBtn{
-  margin:10px auto;
   padding:12px 30px;
   font-size:22px;
   font-family:"BpmfZihiKaiStd-Regular";
@@ -269,7 +268,24 @@ body{
   background:#0066CC;
   color:white;
   cursor:pointer;
-  display:block;
+}
+
+#payActions{
+  display:flex;
+  justify-content:center; /* 保持置中 */
+  gap:16px;
+  margin:10px 0;          /* 跟你原本按鈕的位置差不多 */
+}
+
+#clearBtn{
+  padding:12px 30px;
+  font-size:22px;
+  font-family:"BpmfZihiKaiStd-Regular";
+  border-radius:14px;
+  border:none;
+  background:#444;
+  color:white;
+  cursor:pointer;
 }
 
 #coins{
@@ -503,6 +519,26 @@ body{
   font-family:"BpmfZihiKaiStd-Regular";
 }
 
+/* ✅ 完成付款旁邊加一鍵清空（維持整組置中，不影響其他版面） */
+#payActions{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  margin:10px auto;   /* 跟原本 finishBtn 的位置一致 */
+}
+
+/* ✅ 一鍵清空按鈕樣式（同字體） */
+#clearBtn{
+  padding:12px 30px;
+  font-size:22px;
+  font-family:"BpmfZihiKaiStd-Regular";
+  border-radius:14px;
+  border:none;
+  background:#444;
+  color:white;
+  cursor:pointer;
+}
+
 </style>
 </head>
 <body>
@@ -522,10 +558,14 @@ body{
         <span id="eyeBtn">👁</span>
       </div>
       <div id="payZone"></div>
-   <button id="finishBtn">完成付款</button>
-
+    <div id="payActions">
+      <button id="finishBtn">完成付款</button>
+      <button id="clearBtn">一鍵清空</button>
     </div>
   </div>
+
+</div>
+
   <div id="coins">
     <div style="display:flex;gap:40px;align-items:center;">
       <div class="coin" data-value="1000">1000</div>
@@ -724,11 +764,12 @@ function renderSlide(){
     document.querySelector('.slide').appendChild(closeBtn);
   }
 
-  if(replayMode && currentSlide !== currentSlides.length - 1){
-    closeBtn.style.display = 'block';
-  }else{
-    closeBtn.style.display = 'none';
-  }
+// ✅ 重看模式：每一頁都顯示叉叉（包含最後一頁）
+if(replayMode){
+  closeBtn.style.display = 'block';
+}else{
+  closeBtn.style.display = 'none';
+}
 }
 
 
@@ -1219,6 +1260,16 @@ function showGameModal(text){
     modal.style.display = 'none';
   };
 }
+
+// ✅ 一鍵清空：清空付錢區的錢幣 + 金額歸零
+document.getElementById('clearBtn').onclick = function(){
+  payZone.innerHTML = '';
+  currentSum = 0;
+  updateSum();
+
+  coinRemoveSound.currentTime = 0;
+  coinRemoveSound.play();
+};
 
 </script>
 </body>
