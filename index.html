@@ -40,7 +40,7 @@ body{
 
 .slideContentLeft{
   text-align:left;
-  font-size:24px;
+  font-size:20px;
   line-height:1.2;
   margin-top: 0;
 
@@ -59,7 +59,7 @@ body{
   left: 40px;   /* ← 改成 left */
   right: auto;  /* ← 加這行避免衝突 */
   font-family: "BpmfZihiKaiStd-Regular";
-  font-size: 20px;
+  font-size: 18px;
   color: #ffffff;
 }
 
@@ -260,6 +260,7 @@ body{
 }
 
 #finishBtn{
+  margin:10px auto;
   padding:12px 30px;
   font-size:22px;
   font-family:"BpmfZihiKaiStd-Regular";
@@ -268,24 +269,7 @@ body{
   background:#0066CC;
   color:white;
   cursor:pointer;
-}
-
-#payActions{
-  display:flex;
-  justify-content:center; /* 保持置中 */
-  gap:16px;
-  margin:10px 0;          /* 跟你原本按鈕的位置差不多 */
-}
-
-#clearBtn{
-  padding:12px 30px;
-  font-size:22px;
-  font-family:"BpmfZihiKaiStd-Regular";
-  border-radius:14px;
-  border:none;
-  background:#444;
-  color:white;
-  cursor:pointer;
+  display:block;
 }
 
 #coins{
@@ -452,7 +436,7 @@ body{
 
 /* ===== 倍數輸入小視窗 ===== */
 .multiplierPopup{
-  position:absolute;
+  position:fixed;
   background:#0066CC;
   padding:10px 14px;
   border-radius:12px;
@@ -519,24 +503,23 @@ body{
   font-family:"BpmfZihiKaiStd-Regular";
 }
 
-/* ✅ 完成付款旁邊加一鍵清空（維持整組置中，不影響其他版面） */
-#payActions{
+/* 右側按鈕群組：往左移 + 排成一排 */
+#actionBtns{
   display:flex;
-  justify-content:center;
   gap:16px;
-  margin:10px auto;   /* 跟原本 finishBtn 的位置一致 */
+  margin-left:auto;
+  align-items:center;
 }
 
-/* ✅ 一鍵清空按鈕樣式（同字體） */
 #clearBtn{
-  padding:12px 30px;
-  font-size:22px;
-  font-family:"BpmfZihiKaiStd-Regular";
+  background:#444444;
+  color:white;
+  font-size:24px;
+  padding:14px 28px;
   border-radius:14px;
   border:none;
-  background:#444;
-  color:white;
   cursor:pointer;
+  font-family:"BpmfZihiKaiStd-Regular";
 }
 
 </style>
@@ -558,14 +541,10 @@ body{
         <span id="eyeBtn">👁</span>
       </div>
       <div id="payZone"></div>
-    <div id="payActions">
-      <button id="finishBtn">完成付款</button>
-      <button id="clearBtn">一鍵清空</button>
+   <button id="finishBtn">完成付款</button>
+
     </div>
   </div>
-
-</div>
-
   <div id="coins">
     <div style="display:flex;gap:40px;align-items:center;">
       <div class="coin" data-value="1000">1000</div>
@@ -573,7 +552,9 @@ body{
       <div class="coin" data-value="10">10</div>
       <div class="coin" data-value="1">1</div>
     </div>
+    <div id="actionBtns">
     <button id="historyBtn">過去付款方式</button>
+    <button id="clearBtn">一鍵清空</button>
   </div>
 </div>
 
@@ -645,63 +626,115 @@ const slides=[
 <div class="slideContentLeft">
   
   <p>在遊戲畫面中間會有一󠇡樣商品。</p>
-  <p>在商品右下角的藍色框裡，</p>
+  <p>商品右下角的藍色框裡，</p>
   <p>是你要支付的價錢。</p>
+  <p>而左上角的「重看操作說明」，</p>
+  <p>點擊後就可以重看怎麼怎麼操作。</p>
 
  <div class="imageBox">
   <img src="intro2.png" alt="說明圖片2">
  </div>
 </div>`,
 
+
+
+`<div class="topTitleBox">操作說明</div>
+<div class="slideContentLeft">
+ 
+  <p>在畫面的右上角，</p>
+  <p>付錢區的上方，</p>
+  <p>則會是你已經支付的金額。</p>
+  <p>點擊右下角的眼睛，</p>
+  <p>就可以看到你已經放在付錢區的錢幣總金額。</p>
+  <div class="imageBox">
+   <img src="intro3.png" alt="說明圖片3">
+  </div>
+</div>`,
+
+
 `<div class="topTitleBox">操作說明</div>
 <div class="slideContentLeft">
   <p>在遊戲畫面的下方有1000元、100元、10元與1元。</p>
-  <p>請長按錢幣來移動它們到付錢區來支付。</p>
+  <p>當你點擊某一錢幣時，</p>
+  <p>就可以將錢幣拿起。</p>
+  <p>請在拿起錢幣後，</p>
+  <p>將其移到右方的「付錢區」來支付。</p>
 
   <div class="imageBox">
-  <img src="intro3.png" alt="說明圖片3">
+  <img src="intro4.png" alt="說明圖片4">
   </div>
 
 </div>`,
+
+
+`<div class="topTitleBox">操作說明</div>
+<div class="slideContentLeft">
+  
+  <p>如果你想一次多拿幾個錢幣，</p>
+  <p>也可以在長按住錢幣後，</p>
+  <p>輸入你想要的錢幣數量，</p>
+  <p>這樣你拿起的錢幣數量，</p>
+  <p>就會是你輸入的數量喔！</p>
+
+
+ <div class="imageBox">
+  <img src="intro5.png" alt="說明圖片5">
+ </div>
+</div>`,
+
 
 `<div class="topTitleBox">操作說明</div>
 <div class="slideContentLeft">
 
   <p>如果不小心放錯錢幣，</p>
-  <p>點一󠇡下在付錢區的錢幣就可以移除。</p>
+  <p>點一󠇡下已經在付錢區的錢幣就可以移除了。</p>
+  <p>或者是也可以點擊「一件清空」的按鈕，</p>
+  <p>來把已放在付錢區中的錢幣一次清空。</p>
   <div class="imageBox">
-   <img src="intro4.png" alt="說明圖片4">
+   <img src="intro6.png" alt="說明圖片6">
   </div>
 </div>`,
+
 
 `<div class="topTitleBox">操作說明</div>
 <div class="slideContentLeft">
 
-  <p>在付錢區下方的「過去付款方式」按鈕，</p>
-  <p>可以讓你看到用過的付錢方式。</p>
+  <p>當你在付錢區放上符合商品價格的錢幣時，</p>
+  <p>請點擊「完成付款」來進行支付。</p>
+  <p>付款方式正確則完成一種支付方式。</p>
+  <p>完成一種付款方式後，</p>
+  <p>你可以點擊來清除在付錢區的部分錢幣，</p>
+  <p>再放上其他的錢幣來完成另一種付款方式。</p>
+  <p>但如果使用了重複的付款方式，</p>
+  <p>付錢區的錢幣就會全部清空喔！</p>
 
-  <div class="imageBox">
-   <img src="intro5.png" alt="過去付款方式圖片">
+    <div class="imageBox">
+   <img src="intro7.png" alt="說明圖片7">
   </div>
 </div>`,
 
-`<div class="topTitleBox">操作說明</div>
-<div class="slideContentLeft">
- 
-  <p>在付錢區上方，</p>
-  <p>會是你已經支付的金額。</p>
-  <p>按右下角的眼睛就可以查看你支付的總金額。</p>
-  <div class="imageBox">
-   <img src="intro6.png" alt="說明圖片5">
-  </div>
-</div>`,
+
 
 `<div class="topTitleBox">操作說明</div>
 <div class="slideContentLeft">
-  <p>當支付的金額剛好時，</p>
-  <p>就會自動完成1種付款方式。</p>
-  <p>你總共需要完成3種不同方式喔！</p>
-  <p>一󠇢起來試試看吧！</p>
+
+  <p>而如果你想看看之前用過的付款方式，</p>
+  <p>點擊付錢區下方的「過去付款方式」按鈕，</p>
+  <p>就可以讓你看到用過的付錢方式了。</p>
+
+  <div class="imageBox">
+   <img src="intro8.png" alt="說明圖片8">
+  </div>
+</div>`,
+
+
+
+`<div class="topTitleBox">操作說明</div>
+<div class="slideContentLeft">
+  <p>你總共需要完成3種不同的支付方式喔！</p>
+  <p>當你完成3種不同的支付方式時，</p>
+  <p>遊戲就完成了！</p>
+  <p>一󠇢起來試試看用不同方式支付吧！</p>
 </div>`
 ];
 
@@ -943,7 +976,27 @@ popup.appendChild(confirmBtn);
   document.body.appendChild(popup);
 
   // 固定在錢幣正上方水平置中
-popup.style.left = (rect.left + rect.width/2 - popup.offsetWidth/2) + 'px';
+// 先水平置中
+let left = rect.left + rect.width / 2 - popup.offsetWidth / 2;
+
+// 預設放在錢幣上方
+let top = rect.top - popup.offsetHeight - 10;
+
+// 如果上方放不下，就改放在錢幣下方
+if (top < 10) top = rect.bottom + 10;
+
+// 也避免超出右邊
+left = Math.max(10, Math.min(left, window.innerWidth - popup.offsetWidth - 10));
+
+// 如果放下方會超出底部，就再放回上方（能放的話）
+if (top + popup.offsetHeight > window.innerHeight - 10) {
+  const altTop = rect.top - popup.offsetHeight - 10;
+  if (altTop >= 10) top = altTop;
+  else top = Math.max(10, window.innerHeight - popup.offsetHeight - 10);
+}
+
+popup.style.left = left + 'px';
+popup.style.top  = top + 'px';
 
 // 依照錢幣高度動態決定距離
 const popupHeight = popup.offsetHeight;
@@ -1263,10 +1316,14 @@ function showGameModal(text){
 
 // ✅ 一鍵清空：清空付錢區的錢幣 + 金額歸零
 document.getElementById('clearBtn').onclick = function(){
+  // 清除付錢區所有錢幣
   payZone.innerHTML = '';
+
+  // 金額歸零
   currentSum = 0;
   updateSum();
 
+  // 可選：播放移除音效（如果你希望有回饋）
   coinRemoveSound.currentTime = 0;
   coinRemoveSound.play();
 };
